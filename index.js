@@ -1,5 +1,6 @@
 const app = require('express')();
 const log = require('./services/log');
+const users = require('./services/user');
 
 
 app.get('/', (req, res) => {
@@ -27,7 +28,7 @@ app.get('/load/:user', logTime, (req, res) => {
 
     console.log('user: ', user);
 
-    log.loadLog(user)
+    users.loadLog(user)
     .then((data) => {
         res.json({
             data,
@@ -40,8 +41,16 @@ app.get('/load/:user', logTime, (req, res) => {
 
 });
 
-app.post('/write/:user', logTime, (req, res) => {
+app.post('/create/:user', logTime, (req, res) => {
     const {user} = req.params;
+
+    users.writeLog(user, user)
+    .then(success => {
+        res.json(success)
+    }).catch(err => {
+        res.json({err})
+    })
+
 });
 
 
